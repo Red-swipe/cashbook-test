@@ -688,29 +688,30 @@ class _SpendingAnalysis extends StatelessWidget {
 
     return Column(
       children: [
-        SizedBox(
-          height: 140,
+        Container(
+          height: 180,
+          alignment: Alignment.center,
           child: PieChart(
             PieChartData(
               sections: sorted.map((e) {
                 return PieChartSectionData(
                   value: e.value,
                   color: _pieColors[e.key] ?? Color(0xFF6B7280),
-                  radius: 35,
+                  radius: 40,
                   showTitle: false,
                 );
               }).toList(),
-              centerSpaceRadius: 50,
+              centerSpaceRadius: 60,
               sectionsSpace: 2,
             ),
           ),
         ),
-        SizedBox(height: 4),
+        SizedBox(height: 12),
         Text('$symbol${f.format(totalExp)}',
           style: TextStyle(
-            color: context.text, fontSize: 20,
+            color: context.text, fontSize: 22,
             fontWeight: FontWeight.w700)),
-        SizedBox(height: 16),
+        SizedBox(height: 24),
         ...sorted.map((e) {
           final pct = (e.value / totalExp * 100).toInt();
           final color = _pieColors[e.key] ?? Color(0xFF6B7280);

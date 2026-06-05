@@ -41,6 +41,7 @@ class CategoriesScreen extends StatelessWidget {
     final cats = sp.categories;
 
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       backgroundColor: context.background,
       appBar: AppBar(
         backgroundColor: context.background,
@@ -98,79 +99,81 @@ class CategoriesScreen extends StatelessWidget {
               style: TextStyle(color: context.text)),
           content: SizedBox(
             width: double.maxFinite,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                TextField(
-                  controller: nameController,
-                  autofocus: true,
-                  style: TextStyle(color: context.text),
-                  decoration: InputDecoration(
-                    hintText: 'Category name',
-                    hintStyle:
-                        TextStyle(color: context.textSecondary),
-                    enabledBorder: UnderlineInputBorder(
-                      borderSide:
-                          BorderSide(color: context.textSecondary),
-                    ),
-                    focusedBorder: UnderlineInputBorder(
-                      borderSide:
-                          BorderSide(color: context.text),
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextField(
+                    controller: nameController,
+                    autofocus: true,
+                    style: TextStyle(color: context.text),
+                    decoration: InputDecoration(
+                      hintText: 'Category name',
+                      hintStyle:
+                          TextStyle(color: context.textSecondary),
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide:
+                            BorderSide(color: context.textSecondary),
+                      ),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide:
+                            BorderSide(color: context.text),
+                      ),
                     ),
                   ),
-                ),
-                SizedBox(height: 16),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text('Choose Icon',
-                      style: TextStyle(
-                          color: context.textSecondary,
-                          fontSize: 13)),
-                ),
-                SizedBox(height: 8),
-                SizedBox(
-                  height: 200,
-                  child: GridView.builder(
-                    gridDelegate:
-                        SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 6,
-                      crossAxisSpacing: 8,
-                      mainAxisSpacing: 8,
-                    ),
-                    itemCount: _iconOptions.length,
-                    itemBuilder: (context, i) {
-                      final icon = _iconOptions[i];
-                      final isSelected = icon.codePoint ==
-                          iconNotifier.value.codePoint;
-                      return GestureDetector(
-                        onTap: () {
-                          iconNotifier.value = icon;
-                          setState(() {});
-                        },
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: isSelected
-                                ? context.text
-                                : context.background,
-                            borderRadius: BorderRadius.circular(8),
-                            border: Border.all(
+                  SizedBox(height: 16),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text('Choose Icon',
+                        style: TextStyle(
+                            color: context.textSecondary,
+                            fontSize: 13)),
+                  ),
+                  SizedBox(height: 8),
+                  SizedBox(
+                    height: 200,
+                    child: GridView.builder(
+                      gridDelegate:
+                          SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 6,
+                        crossAxisSpacing: 8,
+                        mainAxisSpacing: 8,
+                      ),
+                      itemCount: _iconOptions.length,
+                      itemBuilder: (context, i) {
+                        final icon = _iconOptions[i];
+                        final isSelected = icon.codePoint ==
+                            iconNotifier.value.codePoint;
+                        return GestureDetector(
+                          onTap: () {
+                            iconNotifier.value = icon;
+                            setState(() {});
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
                               color: isSelected
                                   ? context.text
-                                  : context.textSecondary
-                                      .withValues(alpha: 0.3),
+                                  : context.background,
+                              borderRadius: BorderRadius.circular(8),
+                              border: Border.all(
+                                color: isSelected
+                                    ? context.text
+                                    : context.textSecondary
+                                        .withValues(alpha: 0.3),
+                              ),
                             ),
+                            child: Icon(icon,
+                                size: 22,
+                                color: isSelected
+                                    ? context.background
+                                    : context.text),
                           ),
-                          child: Icon(icon,
-                              size: 22,
-                              color: isSelected
-                                  ? context.background
-                                  : context.text),
-                        ),
-                      );
-                    },
+                        );
+                      },
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
           actions: [

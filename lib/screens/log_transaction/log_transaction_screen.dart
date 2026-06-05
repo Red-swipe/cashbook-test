@@ -370,60 +370,56 @@ class _CategorySelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 44,
-      child: ListView.separated(
-        scrollDirection: Axis.horizontal,
-        itemCount: categories.length,
-        separatorBuilder: (_, _) => SizedBox(width: 8),
-        itemBuilder: (context, index) {
-          final cat = categories[index];
-          final name = cat.name;
-          final icon = cat.icon;
-          final isSelected = selected == name;
+    return Wrap(
+      spacing: 8.0,
+      runSpacing: 4.0,
+      children: categories.map((cat) {
+        final name = cat.name;
+        final icon = cat.icon;
+        final isSelected = selected == name;
 
-          return GestureDetector(
-            onTap: () => onSelected(name),
-            child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 16),
-              decoration: BoxDecoration(
-                color: isSelected
-                    ? context.text
-                    : context.surface,
-                borderRadius: BorderRadius.circular(100),
-              ),
-              child: Row(
-                children: [
-                  SizedBox(
-                    width: 40,
-                    height: 40,
-                    child: Center(
-                      child: Icon(
-                        icon,
-                        size: 18,
-                        color: isSelected
-                            ? context.background
-                            : context.textSecondary,
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: 8),
-                  Text(
-                    name,
-                    style: TextStyle(
+        return GestureDetector(
+          onTap: () => onSelected(name),
+          child: Container(
+            padding: EdgeInsets.fromLTRB(4, 0, 16, 0),
+            decoration: BoxDecoration(
+              color: isSelected
+                  ? context.text
+                  : context.surface,
+              borderRadius: BorderRadius.circular(100),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SizedBox(
+                  width: 40,
+                  height: 40,
+                  child: Center(
+                    child: Icon(
+                      icon,
+                      size: 18,
                       color: isSelected
                           ? context.background
-                          : context.text,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
+                          : context.textSecondary,
                     ),
                   ),
-                ],
-              ),
+                ),
+                SizedBox(width: 8),
+                Text(
+                  name,
+                  style: TextStyle(
+                    color: isSelected
+                        ? context.background
+                        : context.text,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
             ),
-          );
-        },
-      ),
+          ),
+        );
+      }).toList(),
     );
   }
 }

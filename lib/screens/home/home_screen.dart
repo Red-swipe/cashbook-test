@@ -240,6 +240,7 @@ class _SummaryCards extends StatelessWidget {
                       SizedBox(height: 2),
                       FittedBox(
                         fit: BoxFit.scaleDown,
+                        alignment: Alignment.centerLeft,
                         child: Text('$symbol${f.format(income)}',
                           style: TextStyle(
                             color: context.text,
@@ -290,6 +291,7 @@ class _SummaryCards extends StatelessWidget {
                       SizedBox(height: 2),
                       FittedBox(
                         fit: BoxFit.scaleDown,
+                        alignment: Alignment.centerLeft,
                         child: Text('$symbol${f.format(expenses)}',
                           style: TextStyle(
                             color: context.text,
