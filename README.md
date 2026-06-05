@@ -2,6 +2,8 @@
 
 A new Flutter project.
 
+Triggering a fresh build to generate the latest Android debug APK.
+
 ## Getting Started
 
 This project is a starting point for a Flutter application.
