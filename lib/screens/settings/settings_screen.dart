@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../theme/app_colors.dart';
 import '../../theme/colored_context.dart';
 import '../../providers/settings_provider.dart';
@@ -13,6 +15,16 @@ import 'categories_screen.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
+
+  Future<String> _getInstallDate() async {
+    final prefs = await SharedPreferences.getInstance();
+    final dateStr = prefs.getString('install_date');
+    if (dateStr != null) {
+      final date = DateTime.parse(dateStr);
+      return DateFormat('dd MMM yyyy').format(date);
+    }
+    return 'N/A';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,10 +59,15 @@ class SettingsScreen extends StatelessWidget {
                 subtitle: sp.username,
                 onTap: () => _editUsername(context, sp),
               ),
-              SettingsTile(
-                leading: Icons.calendar_today,
-                title: 'Install Date',
-                subtitle: 'N/A',
+              FutureBuilder<String>(
+                future: _getInstallDate(),
+                builder: (context, snapshot) {
+                  return SettingsTile(
+                    leading: Icons.calendar_today,
+                    title: 'Install Date',
+                    subtitle: snapshot.hasData ? 'Member since: ${snapshot.data}' : 'Loading...',
+                  );
+                },
               ),
             ],
           ),

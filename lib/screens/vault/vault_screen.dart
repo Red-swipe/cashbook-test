@@ -18,6 +18,7 @@ class VaultScreen extends StatefulWidget {
 
 class _VaultScreenState extends State<VaultScreen> {
   String _selectedCategory = 'All';
+  String _searchQuery = '';
   late DateTime _rangeStart;
   late DateTime _rangeEnd;
 
@@ -37,6 +38,15 @@ class _VaultScreenState extends State<VaultScreen> {
 
     if (_selectedCategory != 'All') {
       result = result.where((t) => t.category == _selectedCategory).toList();
+    }
+
+    if (_searchQuery.isNotEmpty) {
+      final query = _searchQuery.toLowerCase();
+      result = result.where((t) {
+        final description = t.description?.toLowerCase() ?? '';
+        final category = t.category.toLowerCase();
+        return description.contains(query) || category.contains(query);
+      }).toList();
     }
 
     result.sort((a, b) => b.date.compareTo(a.date));
@@ -276,6 +286,28 @@ class _VaultScreenState extends State<VaultScreen> {
       child: Column(
         children: [
           _VaultTopBar(),
+          Padding(
+            padding: EdgeInsets.fromLTRB(20, 0, 20, 16),
+            child: TextField(
+              onChanged: (value) => setState(() => _searchQuery = value),
+              style: TextStyle(color: context.text),
+              decoration: InputDecoration(
+                hintText: 'Search transactions...',
+                hintStyle: TextStyle(
+                  color: context.textSecondary.withValues(alpha: 0.5),
+                ),
+                prefixIcon: Icon(Icons.search,
+                    color: context.textSecondary.withValues(alpha: 0.5)),
+                filled: true,
+                fillColor: Color(0xFF1A1A1A),
+                contentPadding: EdgeInsets.symmetric(horizontal: 20),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(100),
+                  borderSide: BorderSide.none,
+                ),
+              ),
+            ),
+          ),
           Expanded(
             child: Consumer<TransactionProvider>(
               builder: (context, tp, _) {
@@ -368,6 +400,7 @@ class _VaultScreenState extends State<VaultScreen> {
                         _EmptyFilterState(
                           onClear: () => setState(() {
                             _selectedCategory = 'All';
+                            _searchQuery = '';
                             final now = DateTime.now();
                             _rangeStart = DateTime(now.year, now.month, 1);
                             _rangeEnd = DateTime(now.year, now.month + 1, 0);
@@ -543,7 +576,13 @@ class _VaultTransactionItem extends StatelessWidget {
         ),
         child: Row(
           children: [
-            Icon(icon, color: context.textSecondary, size: 22),
+            SizedBox(
+              width: 40,
+              height: 40,
+              child: Center(
+                child: Icon(icon, color: context.textSecondary, size: 22),
+              ),
+            ),
             SizedBox(width: 14),
             Expanded(
               child: Column(

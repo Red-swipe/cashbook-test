@@ -162,53 +162,54 @@ class _LogTransactionScreenState extends State<LogTransactionScreen> {
       ),
       body: SafeArea(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Expanded(
-              child: SingleChildScrollView(
+              child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 20),
                 child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    SizedBox(height: 16),
                     _AmountDisplay(
                       symbol: symbol,
                       display: _displayAmount,
                     ),
-                    SizedBox(height: 24),
                     _TypeToggle(
                       isExpense: _isExpense,
                       onToggle: (v) => setState(() => _isExpense = v),
                     ),
-                    SizedBox(height: 24),
                     _CategorySelector(
                       categories: context.read<SettingsProvider>().categories,
                       selected: _selectedCategory,
                       onSelected: (c) => setState(() => _selectedCategory = c),
                     ),
-                    SizedBox(height: 20),
                     _DateField(
                       display: _formatDate(_selectedDate),
                       onTap: _pickDate,
                     ),
-                    SizedBox(height: 16),
                     _DescriptionField(
                       controller: _descriptionController,
                     ),
-                    SizedBox(height: 16),
                   ],
                 ),
               ),
             ),
-            _Numpad(
-              onDigitTap: _onDigitTap,
-              onBackspace: _onBackspace,
-            ),
-            Padding(
-              padding: EdgeInsets.fromLTRB(20, 8, 20, 12),
-              child: _SaveButton(
-                isExpense: _isExpense,
-                isEditing: _isEditing,
-                onTap: _saveTransaction,
-              ),
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                _Numpad(
+                  onDigitTap: _onDigitTap,
+                  onBackspace: _onBackspace,
+                ),
+                Padding(
+                  padding: EdgeInsets.fromLTRB(20, 8, 20, 12),
+                  child: _SaveButton(
+                    isExpense: _isExpense,
+                    isEditing: _isEditing,
+                    onTap: _saveTransaction,
+                  ),
+                ),
+              ],
             ),
           ],
         ),
@@ -393,12 +394,18 @@ class _CategorySelector extends StatelessWidget {
               ),
               child: Row(
                 children: [
-                  Icon(
-                    icon,
-                    size: 18,
-                    color: isSelected
-                        ? context.background
-                        : context.textSecondary,
+                  SizedBox(
+                    width: 40,
+                    height: 40,
+                    child: Center(
+                      child: Icon(
+                        icon,
+                        size: 18,
+                        color: isSelected
+                            ? context.background
+                            : context.textSecondary,
+                      ),
+                    ),
                   ),
                   SizedBox(width: 8),
                   Text(

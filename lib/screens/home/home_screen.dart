@@ -117,10 +117,6 @@ class _TopBar extends StatelessWidget {
               fontWeight: FontWeight.w600,
             ),
           ),
-          Spacer(),
-          Icon(Icons.search,
-            color: context.textSecondary.withValues(alpha: 0.6),
-            size: 22),
         ],
       ),
     );
@@ -230,25 +226,30 @@ class _SummaryCards extends StatelessWidget {
                     color: AppColors.income, size: 20),
                 ),
                 SizedBox(width: 12),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('Savings',
-                      style: TextStyle(
-                        color: context.textSecondary.withValues(alpha: 0.8),
-                        fontSize: 13,
-                        fontWeight: FontWeight.w400,
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('Savings',
+                        style: TextStyle(
+                          color: context.textSecondary.withValues(alpha: 0.8),
+                          fontSize: 13,
+                          fontWeight: FontWeight.w400,
+                        ),
                       ),
-                    ),
-                    SizedBox(height: 2),
-                    Text('$symbol${f.format(income)}',
-                      style: TextStyle(
-                        color: context.text,
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600,
+                      SizedBox(height: 2),
+                      FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text('$symbol${f.format(income)}',
+                          style: TextStyle(
+                            color: context.text,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ],
             ),
@@ -275,25 +276,30 @@ class _SummaryCards extends StatelessWidget {
                     color: AppColors.expense, size: 20),
                 ),
                 SizedBox(width: 12),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('Spending',
-                      style: TextStyle(
-                        color: context.textSecondary.withValues(alpha: 0.8),
-                        fontSize: 13,
-                        fontWeight: FontWeight.w400,
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('Spending',
+                        style: TextStyle(
+                          color: context.textSecondary.withValues(alpha: 0.8),
+                          fontSize: 13,
+                          fontWeight: FontWeight.w400,
+                        ),
                       ),
-                    ),
-                    SizedBox(height: 2),
-                    Text('$symbol${f.format(expenses)}',
-                      style: TextStyle(
-                        color: context.text,
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600,
+                      SizedBox(height: 2),
+                      FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text('$symbol${f.format(expenses)}',
+                          style: TextStyle(
+                            color: context.text,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ],
             ),
@@ -371,7 +377,13 @@ class _TransactionItem extends StatelessWidget {
         ),
         child: Row(
           children: [
-            Icon(icon, color: context.textSecondary, size: 22),
+            SizedBox(
+              width: 40,
+              height: 40,
+              child: Center(
+                child: Icon(icon, color: context.textSecondary, size: 22),
+              ),
+            ),
             SizedBox(width: 14),
             Expanded(
               child: Column(
