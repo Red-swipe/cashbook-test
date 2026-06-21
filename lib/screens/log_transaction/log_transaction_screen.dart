@@ -141,78 +141,113 @@ class _LogTransactionScreenState extends State<LogTransactionScreen> {
   @override
   Widget build(BuildContext context) {
     final symbol = context.watch<SettingsProvider>().currencySymbol;
+    final mq = MediaQuery.of(context);
+    final bottomInset = mq.viewInsets.bottom;
 
-    return Scaffold(
-      backgroundColor: context.background,
-      appBar: AppBar(
-        backgroundColor: context.background,
-        elevation: 0,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: context.text),
-          onPressed: () => Navigator.pop(context),
-        ),
-        title: Text(
-          _isEditing ? 'Edit Transaction' : 'Log Transaction',
-          style: TextStyle(
-            color: context.text,
-            fontSize: 18,
-            fontWeight: FontWeight.w600,
+    return Container(
+      decoration: BoxDecoration(
+        color: context.background,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      padding: EdgeInsets.only(bottom: bottomInset),
+      constraints: BoxConstraints(
+        maxHeight: mq.size.height * 0.9,
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _ModalHeader(title: _isEditing ? 'Edit Transaction' : 'Log Transaction'),
+          Flexible(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Column(
+                children: [
+                  const SizedBox(height: 16),
+                  _AmountDisplay(
+                    symbol: symbol,
+                    display: _displayAmount,
+                  ),
+                  const SizedBox(height: 24),
+                  _TypeToggle(
+                    isExpense: _isExpense,
+                    onToggle: (v) => setState(() => _isExpense = v),
+                  ),
+                  const SizedBox(height: 24),
+                  _CategorySelector(
+                    categories: context.read<SettingsProvider>().categories,
+                    selected: _selectedCategory,
+                    onSelected: (c) => setState(() => _selectedCategory = c),
+                  ),
+                  const SizedBox(height: 20),
+                  _DateField(
+                    display: _formatDate(_selectedDate),
+                    onTap: _pickDate,
+                  ),
+                  const SizedBox(height: 16),
+                  _DescriptionField(
+                    controller: _descriptionController,
+                  ),
+                  const SizedBox(height: 24),
+                  _Numpad(
+                    onDigitTap: _onDigitTap,
+                    onBackspace: _onBackspace,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 12, 0, 24),
+                    child: _SaveButton(
+                      isExpense: _isExpense,
+                      isEditing: _isEditing,
+                      onTap: _saveTransaction,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ModalHeader extends StatelessWidget {
+  final String title;
+  const _ModalHeader({required this.title});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        const SizedBox(height: 12),
+        Container(
+          width: 36,
+          height: 4,
+          decoration: BoxDecoration(
+            color: context.textSecondary.withValues(alpha: 0.2),
+            borderRadius: BorderRadius.circular(2),
           ),
         ),
-      ),
-      body: SafeArea(
-        child: Column(
-          children: [
-            Expanded(
-              child: SingleChildScrollView(
-                padding: EdgeInsets.symmetric(horizontal: 20),
-                child: Column(
-                  children: [
-                    SizedBox(height: 16),
-                    _AmountDisplay(
-                      symbol: symbol,
-                      display: _displayAmount,
-                    ),
-                    SizedBox(height: 24),
-                    _TypeToggle(
-                      isExpense: _isExpense,
-                      onToggle: (v) => setState(() => _isExpense = v),
-                    ),
-                    SizedBox(height: 24),
-                    _CategorySelector(
-                      categories: context.read<SettingsProvider>().categories,
-                      selected: _selectedCategory,
-                      onSelected: (c) => setState(() => _selectedCategory = c),
-                    ),
-                    SizedBox(height: 20),
-                    _DateField(
-                      display: _formatDate(_selectedDate),
-                      onTap: _pickDate,
-                    ),
-                    SizedBox(height: 16),
-                    _DescriptionField(
-                      controller: _descriptionController,
-                    ),
-                    SizedBox(height: 16),
-                  ],
+        Padding(
+          padding: const EdgeInsets.fromLTRB(20, 16, 12, 8),
+          child: Row(
+            children: [
+              Text(
+                title,
+                style: TextStyle(
+                  color: context.text,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
-            ),
-            _Numpad(
-              onDigitTap: _onDigitTap,
-              onBackspace: _onBackspace,
-            ),
-            Padding(
-              padding: EdgeInsets.fromLTRB(20, 8, 20, 12),
-              child: _SaveButton(
-                isExpense: _isExpense,
-                isEditing: _isEditing,
-                onTap: _saveTransaction,
+              const Spacer(),
+              IconButton(
+                icon: Icon(Icons.close, color: context.textSecondary, size: 20),
+                onPressed: () => Navigator.pop(context),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
-      ),
+      ],
     );
   }
 }
@@ -369,54 +404,44 @@ class _CategorySelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 44,
-      child: ListView.separated(
-        scrollDirection: Axis.horizontal,
-        itemCount: categories.length,
-        separatorBuilder: (_, _) => SizedBox(width: 8),
-        itemBuilder: (context, index) {
-          final cat = categories[index];
-          final name = cat.name;
-          final icon = cat.icon;
-          final isSelected = selected == name;
+    return Wrap(
+      spacing: 8,
+      runSpacing: 8,
+      children: categories.map((cat) {
+        final name = cat.name;
+        final icon = cat.icon;
+        final isSelected = selected == name;
 
-          return GestureDetector(
-            onTap: () => onSelected(name),
-            child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 16),
-              decoration: BoxDecoration(
-                color: isSelected
-                    ? context.text
-                    : context.surface,
-                borderRadius: BorderRadius.circular(100),
-              ),
-              child: Row(
-                children: [
-                  Icon(
-                    icon,
-                    size: 18,
-                    color: isSelected
-                        ? context.background
-                        : context.textSecondary,
-                  ),
-                  SizedBox(width: 8),
-                  Text(
-                    name,
-                    style: TextStyle(
-                      color: isSelected
-                          ? context.background
-                          : context.text,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ],
-              ),
+        return GestureDetector(
+          onTap: () => onSelected(name),
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+            decoration: BoxDecoration(
+              color: isSelected ? context.text : context.surface,
+              borderRadius: BorderRadius.circular(100),
             ),
-          );
-        },
-      ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  icon,
+                  size: 18,
+                  color: isSelected ? context.background : context.textSecondary,
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  name,
+                  style: TextStyle(
+                    color: isSelected ? context.background : context.text,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      }).toList(),
     );
   }
 }
@@ -641,10 +666,13 @@ class _NumpadKey extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final h = MediaQuery.of(context).size.height;
+    final keyHeight = (h * 0.065).clamp(44.0, 60.0);
+
     return Padding(
-      padding: EdgeInsets.all(4),
+      padding: const EdgeInsets.all(4),
       child: SizedBox(
-        height: 52,
+        height: keyHeight,
         child: Material(
           color: context.surface,
           borderRadius: BorderRadius.circular(12),
