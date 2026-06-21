@@ -31,11 +31,11 @@ class HomeScreen extends StatelessWidget {
               builder: (context, tp, sp, _) {
                 if (tp.transactions.isEmpty) {
                   return _EmptyState(onLogTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => LogTransactionScreen(),
-                      ),
+                    showModalBottomSheet(
+                      context: context,
+                      isScrollControlled: true,
+                      backgroundColor: Colors.transparent,
+                      builder: (_) => const LogTransactionScreen(),
                     );
                   });
                 }
@@ -79,11 +79,11 @@ class HomeScreen extends StatelessWidget {
                       ),
                       SizedBox(height: 24),
                       _LogTransactionButton(onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => LogTransactionScreen(),
-                          ),
+                        showModalBottomSheet(
+                          context: context,
+                          isScrollControlled: true,
+                          backgroundColor: Colors.transparent,
+                          builder: (_) => const LogTransactionScreen(),
                         );
                       }),
                       SizedBox(height: 24),

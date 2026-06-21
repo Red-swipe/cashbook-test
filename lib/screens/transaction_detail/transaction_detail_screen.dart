@@ -133,12 +133,12 @@ class TransactionDetailScreen extends StatelessWidget {
                     height: 52,
                     child: OutlinedButton(
                       onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => LogTransactionScreen(
-                              existingTransaction: transaction,
-                            ),
+                        showModalBottomSheet(
+                          context: context,
+                          isScrollControlled: true,
+                          backgroundColor: Colors.transparent,
+                          builder: (_) => LogTransactionScreen(
+                            existingTransaction: transaction,
                           ),
                         );
                       },
